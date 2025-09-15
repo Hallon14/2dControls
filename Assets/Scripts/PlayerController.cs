@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions playerInputActions;
     //Questions for Anton-sensei
     //Any difference to SerializeField and move shit in the inspector or use GetComponent<>
-    //Access linear dampening in code, reduced ice effect on my character
+    //Movement method; Why is my character never reaching 20 units in speeeeeeeeeeeeeeeeeeeeeeeeeeeed
 
     //Jumping Multipliers
     public float fallMultiplier = 2.5f;
@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
 
     //Movement variables
     private Vector3 inputVector;
-    Vector2 position; // position of ball/circle/gameObject
 
 
     void Awake()
@@ -39,23 +38,24 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext state)
     {
-        if (state.performed)
+        if (rb.linearVelocityY <= 0)
         {
-            if (rb.linearVelocityY < 0)
-            {
-                rb.linearVelocityY += unitData.jumpForce * (-1 * Physics2D.gravity.y) * fallMultiplier * Time.deltaTime;
-            }
-            else if (rb.linearVelocityY > 0 && !state.performed)
-            {
-                rb.linearVelocityY += unitData.jumpForce * (-1 * Physics2D.gravity.y) * lowJumpMultiplier * Time.deltaTime;
-            }
+            //rb.linearVelocityY = unitData.jumpForce * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
+        else if (rb.linearVelocityY > 0 && !Input.GetKeyDown(KeyCode.Space));
+        {
+            rb.linearVelocityY = Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        }
+
+        //Dis fucky wucky. dear god please help.
     }
-    public void Movement()
+    public void Movement() // Dis now work, otto no touchy touchy.
     {
-        
+        float targetSpeed = inputVector.x * unitData.topSpeed;
+        float speedDif = targetSpeed - rb.linearVelocityX;
+        float accel = inputVector.x == 0 ? unitData.decceleration : unitData.acceleration;
+
+        rb.linearVelocityX += speedDif * accel * Time.deltaTime;
     }
-    
-
-
 }
