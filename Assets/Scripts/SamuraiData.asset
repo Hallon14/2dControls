@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SamuraiData
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   topSpeed: 20
-  acceleration: 2
+  acceleration: 3
   decceleration: 10
   jumpForce: 150
   stamina: 150
